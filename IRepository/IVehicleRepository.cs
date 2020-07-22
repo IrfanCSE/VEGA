@@ -6,9 +6,8 @@ namespace VEGA.IRepository
 {
     public interface IVehicleRepository
     {
-        Task<Vehicle> GetDetails(int id);
-        void Add(Vehicle vehicle);
-        Task<Vehicle> Get(int id);
+        Task<Vehicle> GetVehicle(int id, bool includRelated = true);
+        void AddVehicle(Vehicle vehicle);
         void Delete(Vehicle vehicle);
     }
 }

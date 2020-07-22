@@ -1,11 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using VEGA.Data;
 using VEGA.Models;
 using System.Threading.Tasks;
 using VEGA.Models.Dtos;
 using AutoMapper;
-using System.Collections.Generic;
 using VEGA.IRepository;
 
 namespace VEGA.Controllers
@@ -16,11 +13,11 @@ namespace VEGA.Controllers
     {
         private readonly IMapper mapper;
         private readonly IVehicleRepository repository;
-        private readonly VegaDbContext context;
+        private readonly IUnitOfWork unitOfWork;
 
-        public VehicleController(IVehicleRepository repository, IMapper mapper, VegaDbContext context)
+        public VehicleController(IVehicleRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.context = context;
+            this.unitOfWork = unitOfWork;
             this.repository = repository;
             this.mapper = mapper;
         }
@@ -28,15 +25,15 @@ namespace VEGA.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(VehicleDto vehicleDto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vehicle = mapper.Map<VehicleDto,Vehicle>(vehicleDto);
+            var vehicle = mapper.Map<VehicleDto, Vehicle>(vehicleDto);
 
-            repository.Add(vehicle);
-            await context.SaveChangesAsync();
+            repository.AddVehicle(vehicle);
+            await unitOfWork.SaveAsync();
 
-            var dto = mapper.Map<Vehicle,VehicleDto>(vehicle);
+            var dto = mapper.Map<Vehicle, VehicleDto>(vehicle);
 
             return Ok(dto);
         }
@@ -44,17 +41,16 @@ namespace VEGA.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, VehicleDto vehicleDto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var vehicle = await repository.GetDetails(id);
+            var vehicle = await repository.GetVehicle(id);
 
             if (vehicle == null)
                 return NotFound();
 
             var updateVehicle = mapper.Map<VehicleDto, Vehicle>(vehicleDto, vehicle);
-
-            await context.SaveChangesAsync();
+            await unitOfWork.SaveAsync();
 
             var dto = mapper.Map<Vehicle, VehicleDto>(updateVehicle);
 
@@ -64,13 +60,13 @@ namespace VEGA.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var vehicle = repository.GetDetails(id);
+            var vehicle = await repository.GetVehicle(id, includRelated: false);
 
-            if(vehicle == null)
+            if (vehicle == null)
                 return NotFound();
 
-            await repository.Delete(vehicle);
-            await context.SaveChangesAsync();
+            repository.Delete(vehicle);
+            await unitOfWork.SaveAsync();
 
             return Ok(id);
         }
@@ -78,12 +74,13 @@ namespace VEGA.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var vehicle = await repository.GetDetails(id);
+            var vehicle = await repository.GetVehicle(id);
 
             if (vehicle == null)
                 return NotFound();
 
             var vehicleDto = mapper.Map<Vehicle, VehicleDto>(vehicle);
+
             return Ok(vehicleDto);
         }
 

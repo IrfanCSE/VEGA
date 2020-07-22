@@ -18,7 +18,7 @@ namespace VEGA.Repository
             this.context = context;
         }
         
-        public void Add(Vehicle vehicle)
+        public void AddVehicle(Vehicle vehicle)
         {
             context.Vehicles.Add(vehicle);
         }
@@ -28,15 +28,13 @@ namespace VEGA.Repository
             context.Remove(vehicle);
         }
 
-        public async Task<Vehicle> GetDetails(int id)
+        public async Task<Vehicle> GetVehicle(int id, bool includRelated = true)
         {
-            return await context.Vehicles.Include(x => x.Features)
-                        .FirstOrDefaultAsync(x => x.Id == id);
-        }
+            if(!includRelated)
+                return await context.Vehicles.FindAsync(id);
 
-        public async Task<Vehicle> Get(int id)
-        {
-            return await context.Vehicles.Where(x=>x.Id==id).FirstOrDefaultAsync();
+            return await context.Vehicles.Include(x => x.Features)
+                        .SingleOrDefaultAsync(x => x.Id == id);
         }
     }
 }
