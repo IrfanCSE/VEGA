@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<h2 class="badge-info">New Vehicle</h2>
+<form>
+  <div class="form-group">
+    <label for="" class="form-label">Make</label>
+    <select class="form-control" #makeField (change)="onMakeChange(makeField.value)">
+      <option value="">Select Make</option>
+      <option *ngFor="let make of makes" value="{{make.id}}">{{make.name}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="" class="form-label">Model</label>
+    <select class="form-control">
+      <option value="">Select Model</option>
+      <option *ngFor="let model of models" value="{{model.id}}">{{model.name}}</option>
+    </select>
+  </div>
+  <div class="checkbox">
+    <label *ngFor="let feature of features">
+      <input type="checkbox" value="{{feature.id}}">
+      {{feature.name }}
+    </label>
+  </div>
+
+  <h3>Contact</h3>
+  <div class="form-group">
+    <label for="" class="form-label">Name</label>
+    <input type="text" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="" class="form-label">Phone</label>
+    <input type="text" class="form-control">
+  </div>
+  <div class="form-group">
+    <label for="" class="form-label">Email</label>
+    <input type="text" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Save">
+  </div>
+</form>

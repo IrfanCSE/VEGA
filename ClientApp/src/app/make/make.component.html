@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<h1 class="alert-heading">Add Your Vehical!</h1>
+<form>
+  <select class="form-control" ngModel name="make" #makeValue="ngModel" (change)="onMakeChange(makeValue.value)">
+    <option value="">Select Make</option>
+    <option *ngFor="let m of makes" value="{{m.id}}">{{m.name}}</option>
+  </select>
+
+  <select class="form-control">
+    <option value="">Select Model</option>
+    <option *ngFor="let model of models" value="model.id">{{model.name}}</option>
+  </select>
+</form>
