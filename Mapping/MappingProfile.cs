@@ -16,6 +16,10 @@ namespace VEGA.Mapping
             CreateMap<Vehicle,VehicleDto>();
             CreateMap<Contact,ContactDto>();
             CreateMap<VehicleFeature,VehicleFeatureDto>();
+            CreateMap<Vehicle,VehicleDetailsDto>()
+                .ForMember(vDto=>vDto.Features,opt=>opt
+                .MapFrom(v=>v.Features.Select(f=> new FeatureDto{Id=f.Feature.Id,Name=f.Feature.Name})))
+                .ForMember(vDto=>vDto.Make,opt=>opt.MapFrom(v=>v.Model.Make));
                 
 
             //DTO To Domain

@@ -33,7 +33,8 @@ namespace VEGA.Controllers
             repository.AddVehicle(vehicle);
             await unitOfWork.SaveAsync();
 
-            var dto = mapper.Map<Vehicle, VehicleDto>(vehicle);
+            var VehicleDetails = await repository.GetVehicle(vehicle.Id);
+            var dto = mapper.Map<Vehicle, VehicleDetailsDto>(VehicleDetails);
 
             return Ok(dto);
         }
@@ -52,7 +53,8 @@ namespace VEGA.Controllers
             var updateVehicle = mapper.Map<VehicleDto, Vehicle>(vehicleDto, vehicle);
             await unitOfWork.SaveAsync();
 
-            var dto = mapper.Map<Vehicle, VehicleDto>(updateVehicle);
+            var VehicleDetails = await repository.GetVehicle(id);
+            var dto = mapper.Map<Vehicle, VehicleDetailsDto>(VehicleDetails);
 
             return Ok(dto);
         }
@@ -79,7 +81,7 @@ namespace VEGA.Controllers
             if (vehicle == null)
                 return NotFound();
 
-            var vehicleDto = mapper.Map<Vehicle, VehicleDto>(vehicle);
+            var vehicleDto = mapper.Map<Vehicle, VehicleDetailsDto>(vehicle);
 
             return Ok(vehicleDto);
         }

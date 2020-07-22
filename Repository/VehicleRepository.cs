@@ -34,6 +34,9 @@ namespace VEGA.Repository
                 return await context.Vehicles.FindAsync(id);
 
             return await context.Vehicles.Include(x => x.Features)
+                        .ThenInclude(x=>x.Feature)
+                        .Include(x=>x.Model)
+                        .ThenInclude(x=>x.Make)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
     }

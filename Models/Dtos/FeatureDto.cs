@@ -7,10 +7,10 @@ namespace VEGA.Models.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<VehicleFeatureDto> VehicalFeatures { get; set; }
-        public FeatureDto()
-        {
-            VehicalFeatures = new Collection<VehicleFeatureDto>();
-        }
+        // public ICollection<VehicleFeatureDto> VehicalFeatures { get; set; }
+        // public FeatureDto()
+        // {
+        //     VehicalFeatures = new Collection<VehicleFeatureDto>();
+        // }
     }
 }
