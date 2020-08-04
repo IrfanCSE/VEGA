@@ -21,13 +21,13 @@ namespace VEGA.Models.Dtos
         [Required]
         public ContactDto Contact { get; set; }
 
-        public ICollection<VehicleFeatureDto> Features { get; set; }
-        // public ICollection<int> Features { get; set; }
+        // public ICollection<VehicleFeatureDto> Features { get; set; }
+        public ICollection<int> Features { get; set; }
 
         public VehicleDto()
         {
-         Features=new Collection<VehicleFeatureDto>();   
-        //  Features=new Collection<int>();   
+        //  Features=new Collection<VehicleFeatureDto>();   
+         Features=new Collection<int>();   
         }
     }
 }

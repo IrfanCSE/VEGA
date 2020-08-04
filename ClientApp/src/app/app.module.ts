@@ -11,6 +11,7 @@ import { MakeComponent } from './make/make.component';
 import { HomeComponent } from './home/home.component';
 import { MakeService } from './Services/make.service';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
+import { VehicleService } from './Services/vehicle.service';
 
 @NgModule({
    declarations: [
@@ -28,10 +29,11 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'make', component: MakeComponent},
-      { path: 'new/vehicle', component: VehicleFormComponent}
+      { path: 'vehicle/new', component: VehicleFormComponent},
+      { path: 'vehicle/:id', component: VehicleFormComponent}
     ])
   ],
-  providers: [MakeService],
+  providers: [MakeService, VehicleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

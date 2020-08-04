@@ -26,7 +26,8 @@ namespace VEGA.Mapping
             CreateMap<MakeDto,Make>();
             CreateMap<ModelDto,Model>();
             CreateMap<VehicleDto,Vehicle>()
-                .ForMember(v=>v.Id,opt=>opt.Ignore());
+                .ForMember(v=>v.Id,opt=>opt.Ignore())
+                .ForMember(v=>v.Features,opt=>opt.MapFrom(vd=> vd.Features.Select(id=> new VehicleFeature{FeatureId=id})));
             CreateMap<ContactDto,Contact>();
             CreateMap<VehicleFeatureDto,VehicleFeature>();
 

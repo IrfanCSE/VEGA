@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using VEGA.Data;
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
 using VEGA.Mapping;
 using VEGA.IRepository;
 using VEGA.Repository;
@@ -27,11 +26,20 @@ namespace VEGA
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfile));
-            // services.AddAutoMapper(cfg=>{cfg.AddCollectionMappers();cfg.AddProfile(typeof(MappingProfile));});
             services.AddControllersWithViews();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddScoped<IVehicleRepository,VehicleRepository>();
             services.AddDbContext<VegaDbContext>(option=>option.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddControllers().AddNewtonsoftJson();
+            
+            // services.AddCors(option=>{
+            //     option.AddPolicy("CorsPolicy",
+            //     builder=> builder.AllowAnyOrigin()
+            //         .AllowAnyMethod()
+            //         .AllowAnyHeader()
+            //         .AllowCredentials());
+            // });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -81,6 +89,9 @@ namespace VEGA
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            // app.UseCors("CorsPolicy");
+            // app.UseMvc();
         }
     }
 }
