@@ -104,7 +104,7 @@ export class VehicleFormComponent implements OnInit {
     }
   }
 
-  SetVehicle(v: Vehicle) {
+  SetVehicle(v: any) {
     this.vehicle.id = v.id;
     this.vehicle.makeId = v.make.id;
     this.vehicle.modelId = v.model.id;

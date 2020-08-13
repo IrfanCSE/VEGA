@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using VEGA.Models;
 using System.Threading.Tasks;
@@ -84,6 +85,19 @@ namespace VEGA.Controllers
             var vehicleDto = mapper.Map<Vehicle, VehicleDetailsDto>(vehicle);
 
             return Ok(vehicleDto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVehicles([FromQuery]FilterDto filterDto)
+        {
+            var filter = mapper.Map<FilterDto,Filter>(filterDto);
+            var vehicles = await repository.GetVehicles(filter);
+            
+            if (vehicles == null)
+                return NotFound();
+
+            var vehicleDetails = mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleDetailsDto>>(vehicles);
+            return Ok(vehicleDetails);
         }
 
     }

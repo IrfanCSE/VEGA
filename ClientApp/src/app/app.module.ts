@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { MakeService } from './Services/make.service';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehicleService } from './Services/vehicle.service';
+import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 
 @NgModule({
    declarations: [
@@ -19,7 +20,8 @@ import { VehicleService } from './Services/vehicle.service';
       NavMenuComponent,
       HomeComponent,
       MakeComponent,
-      VehicleFormComponent
+      VehicleFormComponent,
+      VehicleListComponent,
    ],
    imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -30,10 +32,13 @@ import { VehicleService } from './Services/vehicle.service';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'make', component: MakeComponent},
       { path: 'vehicle/new', component: VehicleFormComponent},
-      { path: 'vehicle/:id', component: VehicleFormComponent}
+      { path: 'vehicle/:id', component: VehicleFormComponent},
+      { path: 'vehicle', component: VehicleListComponent}
     ])
   ],
   providers: [MakeService, VehicleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

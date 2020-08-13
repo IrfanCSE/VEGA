@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using AutoMapper;
@@ -19,8 +20,7 @@ namespace VEGA.Mapping
             CreateMap<Vehicle,VehicleDetailsDto>()
                 .ForMember(vDto=>vDto.Features,opt=>opt
                 .MapFrom(v=>v.Features.Select(f=> new FeatureDto{Id=f.Feature.Id,Name=f.Feature.Name})))
-                .ForMember(vDto=>vDto.Make,opt=>opt.MapFrom(v=>v.Model.Make));
-                
+                .ForMember(vDto=>vDto.Make,opt=>opt.MapFrom(v=>v.Model.Make));                
 
             //DTO To Domain
             CreateMap<MakeDto,Make>();
@@ -30,6 +30,7 @@ namespace VEGA.Mapping
                 .ForMember(v=>v.Features,opt=>opt.MapFrom(vd=> vd.Features.Select(id=> new VehicleFeature{FeatureId=id})));
             CreateMap<ContactDto,Contact>();
             CreateMap<VehicleFeatureDto,VehicleFeature>();
+            CreateMap<FilterDto,Filter>();
 
         }
     }

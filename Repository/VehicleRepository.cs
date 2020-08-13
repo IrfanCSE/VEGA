@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VEGA.Models.Dtos;
@@ -39,5 +41,24 @@ namespace VEGA.Repository
                         .ThenInclude(x=>x.Make)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<IEnumerable<Vehicle>> GetVehicles(Filter filter){
+            var vehicles = context.Vehicles
+                .Include(x=>x.Model).ThenInclude(x=>x.Make)
+                .Include(x=>x.Features).ThenInclude(x=>x.Feature)
+                .AsQueryable();
+            
+            if(filter.MakeId.HasValue){
+                vehicles = vehicles.Where(x=>x.Model.MakeId==filter.MakeId);
+            }
+
+            if(filter.ModelId.HasValue){
+                vehicles = vehicles.Where(x=>x.ModelId==filter.ModelId);
+            }
+
+            return await vehicles.ToListAsync();
+                
+        }
+
     }
 }

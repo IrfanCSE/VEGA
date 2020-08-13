@@ -26,4 +26,18 @@ constructor(private http: HttpClient) {}
     return this.http.delete(this.vehicleUrl+id);
   }
 
+  public GetVehicles(filter) {
+    return this.http.get(this.vehicleUrl+'?'+this.quaryString(filter));
+  }
+
+  public quaryString(obj) {
+    var parts = [];
+    for (var property in obj) {
+      var value = obj[property];
+      if(value != null && value != undefined){
+        parts.push(encodeURIComponent(property)+'='+encodeURIComponent(value));
+      }
+    }
+    return parts.join('&');
+  }
 }

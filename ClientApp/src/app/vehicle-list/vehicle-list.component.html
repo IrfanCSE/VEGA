@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<div class="form-gorup card card-body">
+    <label for="makeId" class="form-label">Make</label>
+    <select id="makeId" [(ngModel)]="filter.makeId" name="makeId" class="form-control" (change)="makeFilter()" #make="ngModel">
+      <option *ngFor="let make of makes" value="{{make.id}}">{{make.name}}</option>
+    </select>
+    <label for="modelId" class="form-label">Model</label>
+    <select id="modelId" [(ngModel)]="filter.modelId" name="modelId" class="form-control" (change)="modelFilter()" #make="ngModel">
+      <option *ngFor="let model of models" value="{{model.id}}">{{model.name}}</option>
+    </select>
+    <div>
+      <button class="btn btn-dark col-md-2" (click)="OnReset()">Reset</button>
+      <button class="btn btn-dark col-md-2" disabled>Filter</button>
+    </div>
+</div>
+
+<div class="container">
+  <table class="table table-striped table-responsive">
+    <tr>
+      <td>Id</td>
+      <td>Make</td>
+      <td>Model</td>
+      <td>Contact Name</td>
+    </tr>
+    <tr *ngFor="let v of vehicleList">
+      <td>{{v.id}}</td>
+      <td>{{v.make.name}}</td>
+      <td>{{v.model.name}}</td>
+      <td>{{v.contact.name}}</td>
+      <td><a routerLink="/vehicle/{{v.id}}">Edit</a></td>
+    </tr>
+  </table>
+</div>
