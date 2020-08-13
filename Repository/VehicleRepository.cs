@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
@@ -55,6 +56,20 @@ namespace VEGA.Repository
             if(filter.ModelId.HasValue){
                 vehicles = vehicles.Where(x=>x.ModelId==filter.ModelId);
             }
+            
+            var SortObj = new Dictionary<string, Expression<Func<Vehicle, object>>>(){
+                ["make"] = x=>x.Model.MakeId,
+                ["id"] = x=>x.Id,
+                ["model"] = x=>x.ModelId
+            };
+            if(filter.SortBy != null){
+            if(filter.IsAscending){
+                vehicles = vehicles.OrderBy(SortObj[filter.SortBy]);
+            }
+            else{
+                vehicles = vehicles.OrderByDescending(SortObj[filter.SortBy]);
+            }
+        }
 
             return await vehicles.ToListAsync();
                 
