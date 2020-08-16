@@ -18,10 +18,10 @@
 <div class="container">
   <table class="table table-striped table-responsive">
     <tr>
-      <td>Id</td>
-      <td>Make</td>
-      <td>Model</td>
-      <td>Contact Name</td>
+      <td (click)="SortBy('id')">Id</td>
+      <td (click)="SortBy('make')">Make</td>
+      <td (click)="SortBy('model')">Model</td>
+      <td (click)="SortBy('contactName')">Contact Name</td>
     </tr>
     <tr *ngFor="let v of vehicleList">
       <td>{{v.id}}</td>

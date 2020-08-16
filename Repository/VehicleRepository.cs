@@ -60,7 +60,8 @@ namespace VEGA.Repository
             var SortObj = new Dictionary<string, Expression<Func<Vehicle, object>>>(){
                 ["make"] = x=>x.Model.MakeId,
                 ["id"] = x=>x.Id,
-                ["model"] = x=>x.ModelId
+                ["model"] = x=>x.ModelId,
+                ["contactName"] = x=>x.ModelId
             };
             if(filter.SortBy != null){
             if(filter.IsAscending){

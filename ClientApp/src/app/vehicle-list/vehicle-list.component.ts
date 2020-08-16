@@ -44,6 +44,17 @@ export class VehicleListComponent implements OnInit {
   });
 }
 
+SortBy(columnName){
+  if(this.filter.sortBy === columnName && this.filter.isAscending != false){
+    this.filter.isAscending = false;
+  }
+  else{
+    this.filter.sortBy = columnName;
+    this.filter.isAscending = true;
+  }
+  console.log(this.filter);
+  this.GetVehicles();
+}
   OnReset(){
     this.filter.makeId = "";
     this.filter.modelId = "";
