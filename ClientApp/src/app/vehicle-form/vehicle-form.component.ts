@@ -59,6 +59,10 @@ export class VehicleFormComponent implements OnInit {
        this.SetVehicle(data[2]);
        this.OnGetMake();
       }
+    }, (error: Response)=> {
+      if(error.status == 404){
+        this.router.navigateByUrl("vehicle");
+      }
     });
   }
 
@@ -94,7 +98,12 @@ export class VehicleFormComponent implements OnInit {
       this.vehicleService.UpdateVehicle(this.vehicle)
         .subscribe(res => {
           console.log(res);
-        });
+        }, (error: Response) => {
+      console.log(error);
+      if(error.status == 404){
+      this.router.navigateByUrl("vehicle");
+      }
+    });
     }
     else{
       delete this.vehicle.id;
@@ -118,7 +127,7 @@ export class VehicleFormComponent implements OnInit {
   OnClickDelete(){
     this.vehicleService.DeleteVehicle(this.vehicle.id)
       .subscribe(res => {
-        console.log(res);
+        this.router.navigateByUrl("vehicle");
       });
   }
 }

@@ -12,6 +12,7 @@ namespace VEGA.Mapping
         public MappingProfile()
         {
             //Domain To DTO
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultDto<>));
             CreateMap<Make,MakeDto>();
             CreateMap<Model,ModelDto>();
             CreateMap<Vehicle,VehicleDto>();

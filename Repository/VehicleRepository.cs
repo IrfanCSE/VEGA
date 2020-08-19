@@ -20,7 +20,7 @@ namespace VEGA.Repository
         {
             this.context = context;
         }
-        
+
         public void AddVehicle(Vehicle vehicle)
         {
             context.Vehicles.Add(vehicle);
@@ -33,47 +33,67 @@ namespace VEGA.Repository
 
         public async Task<Vehicle> GetVehicle(int id, bool includRelated = true)
         {
-            if(!includRelated)
+            if (!includRelated)
                 return await context.Vehicles.FindAsync(id);
 
             return await context.Vehicles.Include(x => x.Features)
-                        .ThenInclude(x=>x.Feature)
-                        .Include(x=>x.Model)
-                        .ThenInclude(x=>x.Make)
+                        .ThenInclude(x => x.Feature)
+                        .Include(x => x.Model)
+                        .ThenInclude(x => x.Make)
                         .SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles(Filter filter){
+        public async Task<QueryResult<Vehicle>> GetVehicles(Filter filter)
+        {
+            var result = new QueryResult<Vehicle>();
+
             var vehicles = context.Vehicles
-                .Include(x=>x.Model).ThenInclude(x=>x.Make)
-                .Include(x=>x.Features).ThenInclude(x=>x.Feature)
+                .Include(x => x.Model).ThenInclude(x => x.Make)
+                .Include(x => x.Features).ThenInclude(x => x.Feature)
                 .AsQueryable();
-            
-            if(filter.MakeId.HasValue){
-                vehicles = vehicles.Where(x=>x.Model.MakeId==filter.MakeId);
+
+            if (filter.MakeId.HasValue)
+            {
+                vehicles = vehicles.Where(x => x.Model.MakeId == filter.MakeId);
             }
 
-            if(filter.ModelId.HasValue){
-                vehicles = vehicles.Where(x=>x.ModelId==filter.ModelId);
+            if (filter.ModelId.HasValue)
+            {
+                vehicles = vehicles.Where(x => x.ModelId == filter.ModelId);
             }
-            
-            var SortObj = new Dictionary<string, Expression<Func<Vehicle, object>>>(){
-                ["make"] = x=>x.Model.MakeId,
-                ["id"] = x=>x.Id,
-                ["model"] = x=>x.ModelId,
-                ["contactName"] = x=>x.ModelId
+
+            var SortObj = new Dictionary<string, Expression<Func<Vehicle, object>>>()
+            {
+                ["make"] = x => x.Model.MakeId,
+                ["id"] = x => x.Id,
+                ["model"] = x => x.ModelId,
+                ["contactName"] = x => x.ModelId
             };
-            if(filter.SortBy != null){
-            if(filter.IsAscending){
-                vehicles = vehicles.OrderBy(SortObj[filter.SortBy]);
+            if (filter.SortBy != null)
+            {
+                if (filter.IsAscending)
+                {
+                    vehicles = vehicles.OrderBy(SortObj[filter.SortBy]);
+                }
+                else
+                {
+                    vehicles = vehicles.OrderByDescending(SortObj[filter.SortBy]);
+                }
             }
-            else{
-                vehicles = vehicles.OrderByDescending(SortObj[filter.SortBy]);
-            }
-        }
 
-            return await vehicles.ToListAsync();
-                
+            if(filter.PageSize <= 0)
+                filter.PageSize=10;
+            
+            if(filter.Page <= 0)
+                filter.Page=1;
+            
+            result.TotalItems = await vehicles.CountAsync();
+            
+            vehicles = vehicles.Skip((filter.Page-1)*filter.PageSize).Take(filter.PageSize);
+
+            result.Items = await vehicles.ToListAsync();
+            return result;
+
         }
 
     }
