@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using VEGA.Data;
 using VEGA.IRepository;
 using VEGA.Models;
@@ -21,13 +23,15 @@ namespace VEGA.Controllers
         private readonly VegaDbContext context;
         private readonly IVehicleRepository repository;
         private readonly IUnitOfWork unitOfWork;
-        public PhotoController(IWebHostEnvironment host, IVehicleRepository repository, IUnitOfWork unitOfWork, IMapper mapper, VegaDbContext context)
+        private readonly PhotoSettings photoSettings;
+        public PhotoController(IWebHostEnvironment host, IVehicleRepository repository, IUnitOfWork unitOfWork, IMapper mapper, VegaDbContext context,IOptionsSnapshot<PhotoSettings> options)
         {
             this.unitOfWork = unitOfWork;
             this.repository = repository;
             this.context = context;
             this.mapper = mapper;
             this.host = host;
+            this.photoSettings = options.Value;
         }
 
         [HttpPost]
@@ -35,9 +39,12 @@ namespace VEGA.Controllers
         {
             var vehicle = await repository.GetVehicle(vehicleId, includRelated: false);
 
-            if(vehicle == null)
-                return NotFound();
-            
+            if(vehicle == null) return NotFound();            
+            if(file == null) return BadRequest("FIle is Empty");
+            if(file.Length == 0) return BadRequest("No File");
+            if(file.Length > photoSettings.MaxSize) return BadRequest("File Size Gretter then 10Mb");
+            if(!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid File");
+
             var UploadFolderPath = Path.Combine(host.WebRootPath, "Uploads");
 
             if (!Directory.Exists(UploadFolderPath))

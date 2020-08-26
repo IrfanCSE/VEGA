@@ -10,6 +10,7 @@ using AutoMapper;
 using VEGA.Mapping;
 using VEGA.IRepository;
 using VEGA.Repository;
+using VEGA.Models;
 
 namespace VEGA
 {
@@ -25,6 +26,7 @@ namespace VEGA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
             services.AddAutoMapper(typeof(MappingProfile));
             services.AddControllersWithViews();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
